@@ -24,3 +24,9 @@ func Update(c *gin.Context) {
 
 	c.JSON(http.StatusOK, result)
 }
+
+func PageView(c *gin.Context) {
+	c.HTML(http.StatusOK, "index.html", gin.H{
+		"result": "foo",
+	})
+}

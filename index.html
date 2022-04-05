@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <title>Auto Load</title>
+</head>
+<body>
+    <div style="margin-top: 0.25rem; margin-bottom: 0.25rem;">
+        <div id="windStatus">status</div>
+        Wind Level : <span id="wind"></span> m/s
+    </div>
+    <div style="margin-top: 0.25rem; margin-bottom: 0.25rem;">
+        <div id="waterStatus">status</div>
+        Water Level : <span id="water"></span> m
+    </div>
+</body>
+<script>
+    callAjax()
+    setInterval(function(){
+        callAjax()
+    }, 15000);
+
+    function callAjax() {
+        $.ajax({
+            url:"http://localhost:8080/update-status",
+            type:"GET",
+            success: function(response) {
+                console.log(response);
+                setStatus(response.status.wind, response.status.water)
+                let wind = document.getElementById("wind").innerHTML = response.status.wind
+                let water = document.getElementById("water").innerHTML = response.status.water
+            }
+        })
+    }
+
+    function setStatus(wind, water) {
+        let windStatus = document.getElementById("windStatus")
+        let waterStatus = document.getElementById("waterStatus")
+
+        if (wind < 6) {
+            windStatus.style.color = "green"
+            windStatus.innerHTML = "AMAN"
+        }
+
+        else if (wind >= 7 && wind <= 15) {
+            windStatus.style.color = "yellow"
+            windStatus.innerHTML = "SIAGA"
+        }
+
+        else {
+            windStatus.style.color = "red"
+            windStatus.innerHTML = "BAHAYA"
+        }
+
+        if (water < 5) {
+            waterStatus.style.color = "green"
+            waterStatus.innerHTML = "AMAN"
+        }
+
+        else if (water >= 6 && water <= 8) {
+            waterStatus.style.color = "yellow"
+            waterStatus.innerHTML = "SIAGA"
+        }
+
+        else {
+            waterStatus.style.color = "red"
+            waterStatus.innerHTML = "BAHAYA"
+        }
+    }
+</script>
+</html>
